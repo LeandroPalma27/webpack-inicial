@@ -1,0 +1,5 @@
+/* Archivos CSS importados desde javascript con "import './ejemplo1.css'" */
+
+h1 {
+    color: purple;
+}
