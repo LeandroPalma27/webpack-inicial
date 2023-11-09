@@ -11,7 +11,7 @@ const path = require('path');
 
 // Templates que no necesiten ser relacionados con el entry JS global del proyecto:
 let otherHtmlPageNamesWithoutEntryJS = ['ejemplo2-sinEntry'];
-let multipleHtmlPluginsWithoutEntry = otherHtmlPageNamesWithoutEntryJS.map(name => {
+let multipleHtmlPluginsWithoutEntry = ((!otherHtmlPageNamesWithoutEntryJS.length ==  true ? '' : otherHtmlPageNamesWithoutEntryJS.map(name => {
     return new HtmlWebpack({
         // Ruta donde sera transpasado el archivo HTML en el dist:
         filename: `${name}.html`,
@@ -21,7 +21,7 @@ let multipleHtmlPluginsWithoutEntry = otherHtmlPageNamesWithoutEntryJS.map(name 
         chunks: [`${name}`],
         scriptLoading: 'blocking',
     })
-});
+})));
 
 
 // SOLO PARA TEMPLATES QUE NECESITEN RELACION CON EL ENTRY JS GLOBAL DEL PROYECTO:
@@ -29,7 +29,7 @@ let otherHtmlPageNames = ['ejemplo1']; // Añade tus templates aqui para poder g
 
 // Metodo para generar instancias de "HtmlWebpack" que contengan la informacion de todos los demas templates del proyecto en la ruta "html/", todo esto con el fin de hacer el transpaso.
 // Estos son los que si necesitan el entry global.<
-let multipleHtmlPlugins = otherHtmlPageNames.map(name => {
+let multipleHtmlPlugins = ((!otherHtmlPageNames.length == true ? '' : otherHtmlPageNames.map(name => {
     return new HtmlWebpack({
         // Ruta donde sera transpasado el archivo HTML en el dist:
         filename: `${name}.html`,
@@ -39,16 +39,16 @@ let multipleHtmlPlugins = otherHtmlPageNames.map(name => {
         chunks: ['main', `${name}`],
         scriptLoading: 'blocking',
     })
-});
+})));
 
 
 // Metodo para generar un OBJETO de JsonString y almacenarlos en un array para posteriormente unirlos a un objeto "entries".
-// Todo con el fin de poder obtener la relacion del el entry (index.js) con cada uno de los templates, ya que quiza se necesite tener codigo JAVASCRIPT de manera global en todo el proyecto.
+// Todo con el fin de poder obtener la relacion de los entries respectivos con cada uno de los templates.
 // Recordar que en el entry estara toda la logica de nuestro proyecto WEBPACK HTML-CSS-JS (tendra toda la informacion de los modulos).
-// SE CONCATENA EL ARRAY CON LOS TEMPLATES QUE NO NECESITAN EL ENTRY GLOBAL, PORQUE SU ENTRY PRIVADO SI LO NECESITA.
-let entryJsPropertieFiles = otherHtmlPageNames.concat(otherHtmlPageNamesWithoutEntryJS).map(name => {
+let totalTemplates = otherHtmlPageNames.concat(otherHtmlPageNamesWithoutEntryJS);
+let entryJsPropertieFiles = ((!totalTemplates.length == true ? '' : totalTemplates.map(name => {
     return JSON.parse(`{ "${name}": "./src/js/${name}.js" }`);
-});
+})));
 // Objeto JS con el nombre del template como atributo y la ruta del entry como valor del atributo:
 let entries = {};
 for (file of entryJsPropertieFiles) {
@@ -69,7 +69,8 @@ module.exports = {
     /*
        Sirve para poder configurar el comportamiento de los modulos el proyecto webpack.
     */
-   // Definimos los templates que tendran relacion con el entry del proyecto que es MAIN.JS
+    // Definimos cuales seran los entries de la aplicacion (los archivos JS principales de los templates o del proyecto en general).
+   // En otras palabras, los entries que se van a pasar al build final.
     entry: {
         main: './src/main.js',
         ...entries,
