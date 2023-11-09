@@ -11,7 +11,7 @@ const path = require('path');
 
 // Templates que no necesiten ser relacionados con el entry JS global del proyecto:
 let otherHtmlPageNamesWithoutEntryJS = ['ejemplo2-sinEntry'];
-let multipleHtmlPluginsWithoutEntry = ((!otherHtmlPageNamesWithoutEntryJS.length ==  true ? '' : otherHtmlPageNamesWithoutEntryJS.map(name => {
+let multipleHtmlPluginsWithoutEntry = ((!otherHtmlPageNamesWithoutEntryJS.length ==  true ? [] : otherHtmlPageNamesWithoutEntryJS.map(name => {
     return new HtmlWebpack({
         // Ruta donde sera transpasado el archivo HTML en el dist:
         filename: `${name}.html`,
@@ -29,7 +29,7 @@ let otherHtmlPageNames = ['ejemplo1']; // Añade tus templates aqui para poder g
 
 // Metodo para generar instancias de "HtmlWebpack" que contengan la informacion de todos los demas templates del proyecto en la ruta "html/", todo esto con el fin de hacer el transpaso.
 // Estos son los que si necesitan el entry global.<
-let multipleHtmlPlugins = ((!otherHtmlPageNames.length == true ? '' : otherHtmlPageNames.map(name => {
+let multipleHtmlPlugins = ((!otherHtmlPageNames.length == true ? [] : otherHtmlPageNames.map(name => {
     return new HtmlWebpack({
         // Ruta donde sera transpasado el archivo HTML en el dist:
         filename: `${name}.html`,
@@ -46,7 +46,7 @@ let multipleHtmlPlugins = ((!otherHtmlPageNames.length == true ? '' : otherHtmlP
 // Todo con el fin de poder obtener la relacion de los entries respectivos con cada uno de los templates.
 // Recordar que en el entry estara toda la logica de nuestro proyecto WEBPACK HTML-CSS-JS (tendra toda la informacion de los modulos).
 let totalTemplates = otherHtmlPageNames.concat(otherHtmlPageNamesWithoutEntryJS);
-let entryJsPropertieFiles = ((!totalTemplates.length == true ? '' : totalTemplates.map(name => {
+let entryJsPropertieFiles = ((!totalTemplates.length == true ? [] : totalTemplates.map(name => {
     return JSON.parse(`{ "${name}": "./src/js/${name}.js" }`);
 })));
 // Objeto JS con el nombre del template como atributo y la ruta del entry como valor del atributo:
